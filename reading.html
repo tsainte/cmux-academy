@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading · cmux Academy</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap">
+  <h1>Reading list</h1>
+  <p class="lede">The official documentation, ordered by module. Tick a page once you have read it.</p>
+  <div class="card" style="margin-top:14px">
+    <strong id="sum">0 of 0 read</strong>
+    <div class="bar" style="margin-top:8px" id="bar"><i></i></div>
+  </div>
+  <div id="list"></div>
+
+  <h2>Read it in the terminal</h2>
+  <div class="card">
+    <p style="margin-top:0">cmux ships its own pointers, handy when you are offline or want something an agent can read:</p>
+<pre><code>cmux guide                  # agent-oriented guide
+cmux docs shortcuts         # how to fetch the latest shortcut docs
+cmux docs settings
+cmux docs api
+cmux config docs
+cmux welcome                # the built-in tour</code></pre>
+  </div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const { A, esc, store, renderNav, moduleById } = Academy;
+  renderNav("reading");
+  let read = new Set(store.get("read", []));
+
+  function render() {
+    let html = "";
+    for (const m of A.modules) {
+      const items = A.links.filter((l) => l.m === m.id);
+      if (!items.length) continue;
+      html += `<h2>Module ${m.n}: ${esc(m.title)}</h2><div class="card"><ul class="links">` + items.map((l) => `
+        <li>
+          <a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.title)}</a>
+          <span class="why">${esc(l.kind)} · ${esc(l.why)}</span>
+          <label><input type="checkbox" data-url="${esc(l.url)}" ${read.has(l.url) ? "checked" : ""}> Read</label>
+        </li>`).join("") + "</ul></div>";
+    }
+    document.getElementById("list").innerHTML = html;
+    const n = A.links.filter((l) => read.has(l.url)).length;
+    document.getElementById("sum").textContent = `${n} of ${A.links.length} read`;
+    document.getElementById("bar").firstElementChild.style.width = Math.round((100 * n) / A.links.length) + "%";
+  }
+  document.getElementById("list").addEventListener("change", (e) => {
+    if (!e.target.matches("input[type=checkbox]")) return;
+    e.target.checked ? read.add(e.target.dataset.url) : read.delete(e.target.dataset.url);
+    store.set("read", [...read]);
+    render();
+  });
+  render();
+</script>
+</body>
+</html>

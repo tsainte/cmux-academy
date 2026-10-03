@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drill · cmux Academy</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap">
+  <h1>Drill</h1>
+  <p class="lede">Read the prompt, say the answer out loud or press the keys in cmux, then reveal. Cards you miss come back more often.</p>
+
+  <div class="row" style="justify-content:flex-start">
+    <label>Deck <select id="deck">
+      <option value="both">Shortcuts and commands</option>
+      <option value="s">Shortcuts only</option>
+      <option value="c">Commands only</option>
+    </select></label>
+    <label>Module <select id="mod"></select></label>
+  </div>
+
+  <div class="card flash" id="card" tabindex="0" role="button" aria-label="Flashcard. Press space to reveal the answer.">
+    <div class="hint" id="kind"></div>
+    <div class="q" id="q"></div>
+    <div class="a" id="a" aria-live="polite"></div>
+    <div class="hint" id="hint">Click the card or press <kbd>Space</kbd> to reveal</div>
+  </div>
+  <div class="row">
+    <button class="btn ghost" id="miss" type="button" disabled>Missed it <kbd>1</kbd></button>
+    <button class="btn" id="got" type="button" disabled>Got it <kbd>2</kbd></button>
+  </div>
+  <div class="stats" id="stats"></div>
+  <p class="row"><button class="btn ghost" id="reset" type="button">Reset drill progress</button></p>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const { A, esc, store, renderNav } = Academy;
+  renderNav("drill");
+
+  const cards = [
+    ...A.shortcuts.map((s) => ({ id: "s:" + s.keys + "|" + s.action, kind: "s", m: s.m, q: s.action, a: s.keys.split(" ").map((k) => `<kbd>${esc(k)}</kbd>`).join(" "), cat: s.cat })),
+    ...A.commands.map((c) => ({ id: "c:" + c.cmd, kind: "c", m: c.m, q: c.what, a: `<code>${esc(c.cmd)}</code>`, cat: "CLI" })),
+  ];
+
+  const deckEl = document.getElementById("deck"), modEl = document.getElementById("mod");
+  modEl.innerHTML = '<option value="">All modules</option>' + A.modules.map((m) => `<option value="${m.id}">${m.n}. ${esc(m.title)}</option>`).join("");
+  const hashMod = (location.hash || "").slice(1);
+  if (A.modules.some((m) => m.id === hashMod)) modEl.value = hashMod;
+
+  let boxes = store.get("drill", {});  // id -> 0..3 (higher = better known)
+  let session = { seen: 0, got: 0 };
+  let current = null, revealed = false;
+
+  const pool = () => cards.filter((c) => (deckEl.value === "both" || c.kind === deckEl.value) && (!modEl.value || c.m === modEl.value));
+
+  function pick() {
+    const p = pool();
+    if (!p.length) return null;
+    const weights = p.map((c) => (c === current && p.length > 1 ? 0 : 4 - (boxes[c.id] || 0)));
+    let r = Math.random() * weights.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < p.length; i++) { r -= weights[i]; if (r < 0) return p[i]; }
+    return p[p.length - 1];
+  }
+
+  function show() {
+    current = pick();
+    revealed = false;
+    const has = !!current;
+    document.getElementById("kind").textContent = has ? (current.kind === "s" ? `Shortcut · ${current.cat}` : "CLI command") : "";
+    document.getElementById("q").textContent = has ? (current.kind === "s" ? current.q : "Which command: " + current.q.charAt(0).toLowerCase() + current.q.slice(1) + "?") : "No cards in this deck.";
+    document.getElementById("a").innerHTML = "";
+    document.getElementById("hint").hidden = !has;
+    document.getElementById("miss").disabled = document.getElementById("got").disabled = true;
+    stats();
+  }
+
+  function reveal() {
+    if (!current || revealed) return;
+    revealed = true;
+    document.getElementById("a").innerHTML = current.a;
+    document.getElementById("hint").hidden = true;
+    document.getElementById("miss").disabled = document.getElementById("got").disabled = false;
+  }
+
+  function grade(good) {
+    if (!current || !revealed) return;
+    const b = boxes[current.id] || 0;
+    boxes[current.id] = good ? Math.min(3, b + 1) : 0;
+    store.set("drill", boxes);
+    session.seen++; if (good) session.got++;
+    show();
+  }
+
+  function stats() {
+    const p = pool();
+    const known = p.filter((c) => (boxes[c.id] || 0) >= 3).length;
+    document.getElementById("stats").innerHTML =
+      `<span>This session: <b>${session.got}/${session.seen}</b></span>` +
+      `<span>Known in this deck: <b>${known}/${p.length}</b></span>`;
+  }
+
+  document.getElementById("card").addEventListener("click", reveal);
+  document.getElementById("miss").addEventListener("click", () => grade(false));
+  document.getElementById("got").addEventListener("click", () => grade(true));
+  deckEl.addEventListener("change", show);
+  modEl.addEventListener("change", show);
+  document.getElementById("reset").addEventListener("click", () => {
+    if (confirm("Forget which cards you know?")) { boxes = {}; store.set("drill", boxes); session = { seen: 0, got: 0 }; show(); }
+  });
+  addEventListener("keydown", (e) => {
+    if (e.target.matches("select, input")) return;
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); reveal(); }
+    else if (e.key === "1") grade(false);
+    else if (e.key === "2") grade(true);
+  });
+  show();
+</script>
+</body>
+</html>

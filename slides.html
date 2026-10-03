@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Slides · cmux Academy</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/monokai.css">
+<style>
+  :root { --r-heading-text-transform: none; --r-main-font-size: 34px; --acc: #8b87ff; }
+  .reveal h1, .reveal h2, .reveal h3 { letter-spacing: -.01em; }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal section { text-align: left; }
+  .reveal .center-text { text-align: center; }
+  .reveal kbd { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .78em; background: #2a2d36; border: 1px solid #4b5060; border-bottom-width: 3px; border-radius: 6px; padding: .05em .4em; color: #fff; white-space: nowrap; }
+  .reveal code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .reveal :not(pre) > code { background: #2a2d36; padding: .05em .3em; border-radius: 4px; font-size: .88em; color: #cfd0ff; }
+  .reveal pre { width: 100%; font-size: .6em; box-shadow: none; }
+  .reveal pre code { max-height: none; padding: .6em 1em; border-radius: 10px; }
+  .reveal pre.tight { font-size: .48em; }
+  .reveal ul, .reveal ol { display: block; margin-left: 1em; }
+  .reveal li { margin: .25em 0; }
+  .muted { color: #9aa3b0; }
+  .small { font-size: .7em; }
+  .tag { display: inline-block; font-size: .5em; letter-spacing: .08em; text-transform: uppercase; color: var(--acc); border: 1px solid var(--acc); border-radius: 99px; padding: .1em .8em; vertical-align: middle; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; align-items: start; }
+  .box { border: 1px solid #3b4050; border-radius: 12px; padding: .5em .8em; background: #1d2027; }
+  .nest { border: 2px solid #4b5060; border-radius: 14px; padding: .5em .7em; }
+  .nest > .nest { margin-top: .4em; border-color: #6a6fd6; }
+  .nest > .nest > .nest { border-color: #3ea66b; }
+  .nest > .nest > .nest > .nest { border-color: #d9a03f; }
+  .nest b { font-size: .8em; color: #fff; }
+  .nest small { color: #9aa3b0; font-size: .6em; margin-left: .4em; }
+  table.k { font-size: .62em; border-collapse: collapse; width: 100%; }
+  table.k td { padding: .25em .6em; border-bottom: 1px solid #2f3340; }
+  table.k td:first-child { white-space: nowrap; }
+  .task { border-left: 4px solid var(--acc); padding: .2em .9em; background: #1d2027; border-radius: 0 10px 10px 0; font-size: .75em; margin-top: .8em; }
+  .task b { color: var(--acc); }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- ============ Title ============ -->
+<section data-state="title">
+  <h1>cmux Academy</h1>
+  <p class="muted">A hands-on course for the terminal built for running coding agents</p>
+  <p class="small muted">Press <kbd>→</kbd> to advance · <kbd>S</kbd> speaker notes · <kbd>O</kbd> overview · <kbd>F</kbd> full screen · <a href="index.html">back to the academy</a></p>
+  <aside class="notes">Five modules, roughly three hours in total. Keep a cmux window open next to this deck and try each thing as it comes up.</aside>
+</section>
+
+<section>
+  <h2>What cmux is</h2>
+  <ul>
+    <li>A native macOS terminal, built on <b>Ghostty</b></li>
+    <li>Vertical tabs in a sidebar, one per project or agent</li>
+    <li>A notification panel that tells you which agent needs you</li>
+    <li>An in-app browser and diff viewer</li>
+    <li>A CLI and socket API, so scripts can drive all of it</li>
+  </ul>
+  <p class="muted small">Your Ghostty config still applies. cmux adds the multi-agent layer on top.</p>
+</section>
+
+<section>
+  <h2>The plan</h2>
+  <div class="cols">
+    <ol>
+      <li><b>Orientation</b> · vocabulary, sidebar, palette</li>
+      <li><b>Layout</b> · splits, tabs, workspaces</li>
+      <li><b>Agents</b> · notifications, status, diffs</li>
+    </ol>
+    <ol start="4">
+      <li><b>Browser</b> · docs and localhost in a split</li>
+      <li><b>Automate</b> · CLI, config, custom layouts</li>
+    </ol>
+  </div>
+  <p class="small muted">After each module: do the tasks in <code>tasks.html</code>. Learning happens there, not here.</p>
+</section>
+
+<!-- ============ Module 1 ============ -->
+<section id="m1">
+  <section>
+    <p class="tag">Module 1</p>
+    <h2>Orientation</h2>
+    <p class="muted">Get the vocabulary right and everything else gets easier.</p>
+  </section>
+
+  <section>
+    <h2>Five levels</h2>
+    <div class="nest"><b>Window</b><small>a macOS window · ⌘⇧N</small>
+      <div class="nest"><b>Workspace</b><small>a row in the left sidebar · ⌘N</small>
+        <div class="nest"><b>Pane</b><small>a split region · ⌘D / ⌘⇧D</small>
+          <div class="nest"><b>Surface</b><small>a tab inside a pane · ⌘T</small></div>
+        </div>
+      </div>
+    </div>
+    <p class="small muted">A <b>panel</b> is what a surface shows: a terminal (Ghostty) or a browser.</p>
+  </section>
+
+  <section>
+    <h2>Same thing, two names</h2>
+    <ul>
+      <li>The UI sometimes says <b>tab</b>; the API says <b>workspace</b></li>
+      <li>"Tab" inside a pane means a <b>surface</b></li>
+      <li>When you use the CLI, use <b>workspace</b> and <b>surface</b></li>
+    </ul>
+    <p class="small muted">Refs look like <code>workspace:2</code>, <code>pane:3</code>, <code>surface:4</code>. Pass <code>--id-format uuids</code> if you want UUIDs.</p>
+  </section>
+
+  <section>
+    <h2>Where am I?</h2>
+<pre><code class="language-bash">cmux tree                       # everything, as a tree
+cmux identify                   # the ids of this shell
+echo $CMUX_WORKSPACE_ID $CMUX_SURFACE_ID</code></pre>
+    <p class="small muted">cmux sets these variables in every terminal it opens, so scripts know where they run.</p>
+    <div class="task"><b>Task m1-1, m1-2</b> · map the tree, then find yourself in it.</div>
+  </section>
+
+  <section>
+    <h2>Sidebars and the palette</h2>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>B</kbd></td><td>Left sidebar (workspaces)</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⌥</kbd><kbd>B</kbd></td><td>Right sidebar (files, find, sessions, feed, dock)</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>P</kbd></td><td>Command palette: every action, searchable</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>P</kbd></td><td>Go to workspace</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>,</kbd></td><td>Settings</td></tr>
+    </table>
+    <p class="small muted">Forgot a shortcut? The palette is the safety net.</p>
+    <div class="task"><b>Tasks m1-3 to m1-5</b></div>
+  </section>
+</section>
+
+<!-- ============ Module 2 ============ -->
+<section id="m2">
+  <section>
+    <p class="tag">Module 2</p>
+    <h2>Layout and navigation</h2>
+    <p class="muted">Build any layout without touching the mouse.</p>
+  </section>
+
+  <section>
+    <h2>Panes: split, focus, zoom</h2>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>D</kbd> / <kbd>⌘</kbd><kbd>⇧</kbd><kbd>D</kbd></td><td>Split right / down</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>←↑↓→</kbd></td><td>Focus the pane in that direction</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>↩</kbd></td><td>Zoom the pane, press again to restore</td></tr>
+      <tr><td><kbd>⌃</kbd><kbd>⇧</kbd><kbd>H J K L</kbd></td><td>Resize left, down, up, right</td></tr>
+      <tr><td><kbd>⌃</kbd><kbd>⌘</kbd><kbd>⇧</kbd><kbd>=</kbd></td><td>Equalise sizes</td></tr>
+    </table>
+    <div class="task"><b>Tasks m2-1, m2-2</b></div>
+  </section>
+
+  <section>
+    <h2>Surfaces: tabs in a pane</h2>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>T</kbd></td><td>New surface</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>R</kbd></td><td>Rename it</td></tr>
+      <tr><td><kbd>⌃</kbd><kbd>1…9</kbd></td><td>Jump to surface N</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>[</kbd> <kbd>]</kbd></td><td>Previous / next surface</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>T</kbd></td><td>Reopen the last closed one</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>⇧</kbd><kbd>←↑↓→</kbd></td><td>Move the surface to another pane</td></tr>
+    </table>
+    <div class="task"><b>Tasks m2-3, m2-5</b></div>
+  </section>
+
+  <section>
+    <h2>Workspaces and groups</h2>
+    <ul>
+      <li>One workspace per project, or per agent task</li>
+      <li><kbd>⌘</kbd><kbd>N</kbd> new · <kbd>⌘</kbd><kbd>⇧</kbd><kbd>R</kbd> rename · <kbd>⌘</kbd><kbd>1…9</kbd> jump</li>
+      <li><kbd>⌘</kbd><kbd>⇧</kbd><kbd>G</kbd> group selected workspaces, <kbd>⌃</kbd><kbd>⌘</kbd><kbd>.</kbd> collapse</li>
+      <li><kbd>⌃</kbd><kbd>⌘</kbd><kbd>S</kbd> save the layout as a template</li>
+    </ul>
+    <div class="task"><b>Tasks m2-4, m2-6, m2-8</b></div>
+  </section>
+
+  <section>
+    <h2>The same layout from the CLI</h2>
+<pre><code class="language-bash">cmux new-workspace --name scratch --cwd ~
+cmux new-split right
+cmux new-split down --command "ls"
+cmux tree
+cmux close-workspace --workspace workspace:5   # your ref will differ</code></pre>
+    <p class="small muted">Anything you can do by keyboard, a script can do. That is the whole idea of Module 5.</p>
+    <div class="task"><b>Task m2-7</b></div>
+  </section>
+</section>
+
+<!-- ============ Module 3 ============ -->
+<section id="m3">
+  <section>
+    <p class="tag">Module 3</p>
+    <h2>Working with agents</h2>
+    <p class="muted">The reason cmux exists.</p>
+  </section>
+
+  <section>
+    <h2>The problem</h2>
+    <ul>
+      <li>Three Claude Code sessions, three projects</li>
+      <li>You cannot watch all of them</li>
+      <li>You do not want to poll them</li>
+    </ul>
+    <p class="fragment">cmux turns "which one is waiting?" into something the terminal tells you.</p>
+  </section>
+
+  <section>
+    <h2>Notifications</h2>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>I</kbd></td><td>Show the notification panel</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>U</kbd></td><td>Jump to the latest unread</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>U</kbd></td><td>Toggle unread on the current item</td></tr>
+    </table>
+<pre><code class="language-bash">make test; cmux notify --title "Tests" --body "finished"
+cmux list-notifications
+cmux clear-notifications</code></pre>
+    <p class="small muted">Your Claude Code is launched through a cmux wrapper, so its hooks are already registered. You do not need to add any.</p>
+    <div class="task"><b>Tasks m3-1, m3-2, m3-9</b></div>
+  </section>
+
+  <section>
+    <h2>Status, progress, log</h2>
+<pre><code class="language-bash">cmux set-status build "passing" --color "#2ea043"
+cmux set-progress 0.6 --label "Migrating"
+cmux log --level info --source deploy "step 3 of 5"
+
+cmux clear-status build
+cmux clear-progress</code></pre>
+    <p class="small muted">Use a unique key per tool so different scripts do not overwrite each other's pills.</p>
+    <div class="task"><b>Tasks m3-3 to m3-5</b></div>
+  </section>
+
+  <section>
+    <h2>Review what the agent changed</h2>
+<pre><code class="language-bash">cmux diff --unstaged        # also --staged, --branch, --last-turn
+cmux markdown open PLAN.md  # live-reloading viewer</code></pre>
+    <ul class="small">
+      <li>Diff viewer: <kbd>J</kbd>/<kbd>K</kbd> scroll, <kbd>/</kbd> search files, <kbd>⌃</kbd><kbd>⌘</kbd><kbd>⇧</kbd><kbd>D</kbd> to open</li>
+      <li><code>--last-turn</code> is the one to reach for after an agent finishes</li>
+    </ul>
+    <div class="task"><b>Tasks m3-6, m3-7</b></div>
+  </section>
+
+  <section>
+    <h2>Agent teams</h2>
+<pre><code class="language-bash">cmux claude-teams
+cmux claude-teams --continue
+cmux claude-teams --model sonnet</code></pre>
+    <p>Teammate agents appear as <b>native cmux splits</b> instead of tmux panes, with sidebar metadata and notifications.</p>
+    <div class="task"><b>Tasks m3-8, m3-10</b> · todo list, then teams.</div>
+  </section>
+</section>
+
+<!-- ============ Module 4 ============ -->
+<section id="m4">
+  <section>
+    <p class="tag">Module 4</p>
+    <h2>The built-in browser</h2>
+    <p class="muted">Docs and localhost next to your terminal.</p>
+  </section>
+
+  <section>
+    <h2>Open one</h2>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>L</kbd></td><td>Open a browser</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>D</kbd></td><td>Browser split to the right (<kbd>⇧</kbd> for down)</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>L</kbd></td><td>Address bar</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>I</kbd></td><td>Developer tools</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>↩</kbd></td><td>Focus mode: the page gets your keys</td></tr>
+    </table>
+<pre><code class="language-bash">cmux browser open http://localhost:3000</code></pre>
+    <div class="task"><b>Tasks m4-1 to m4-3</b></div>
+  </section>
+
+  <section>
+    <h2>Script the browser</h2>
+<pre><code class="language-bash">cmux browser snapshot --interactive      # page as text, with refs
+cmux browser get title
+cmux browser eval "document.title"
+cmux browser wait --text "Ready" --timeout-ms 5000
+cmux browser click "button.submit"
+cmux browser screenshot --out ./shot.png</code></pre>
+    <p class="small muted">This is how an agent can look at the app it just built. It also works for you in shell scripts.</p>
+    <div class="task"><b>Tasks m4-4 to m4-6</b></div>
+  </section>
+</section>
+
+<!-- ============ Module 5 ============ -->
+<section id="m5">
+  <section>
+    <p class="tag">Module 5</p>
+    <h2>Automate and customise</h2>
+    <p class="muted">Make cmux yours.</p>
+  </section>
+
+  <section>
+    <h2>Drive other terminals</h2>
+<pre><code class="language-bash">cmux tree                                    # find the ref
+cmux send --surface surface:4 "npm test"
+cmux send-key --surface surface:4 enter
+cmux read-screen --surface surface:4 --lines 20</code></pre>
+    <p class="small muted">One agent can start work in another pane and read the result back. <code>--scrollback</code> reads history too.</p>
+    <div class="task"><b>Task m5-5</b></div>
+  </section>
+
+  <section>
+    <h2>Two config files</h2>
+    <div class="cols">
+      <div class="box"><b>Ghostty config</b><br><code>~/.config/ghostty/config</code>
+        <p class="small muted" style="margin:.4em 0 0">Fonts, themes, scrollback, terminal behaviour</p></div>
+      <div class="box"><b>cmux.json</b><br><code>~/.config/cmux/cmux.json</code>
+        <p class="small muted" style="margin:.4em 0 0">Shortcuts, sidebar, notifications, browser, custom commands</p></div>
+    </div>
+<pre><code class="language-bash">cmux config path
+cmux config doctor
+cmux reload-config        # both files, no restart (⌘⇧,)</code></pre>
+    <p class="small">Back up <code>cmux.json</code> before editing. It is JSON with comments.</p>
+    <div class="task"><b>Tasks m5-1 to m5-3</b></div>
+  </section>
+
+  <section>
+    <h2>Your own shortcuts</h2>
+<pre><code class="language-json">{
+  "shortcuts": {
+    "bindings": {
+      "showNotifications": ["ctrl+b", "i"],
+      "toggleSidebar": "cmd+b",
+      "splitRight": ""
+    }
+  }
+}</code></pre>
+    <ul class="small">
+      <li>A string is a single shortcut; a two-item array is a <b>chord</b></li>
+      <li>An empty string or <code>null</code> unbinds it</li>
+    </ul>
+    <div class="task"><b>Task m5-4</b></div>
+  </section>
+
+  <section>
+    <h2>Custom workspace layouts</h2>
+<pre class="tight"><code class="language-json">{
+  "actions": {
+    "review-setup": {
+      "type": "workspace",
+      "title": "Review Setup",
+      "workspace": {
+        "name": "Review", "cwd": "~/code/app",
+        "setup": "git fetch --all --prune",
+        "layout": {
+          "direction": "horizontal", "split": 0.5,
+          "children": [
+            { "pane": { "surfaces": [
+              { "type": "terminal", "name": "Claude",
+                "command": "claude", "focus": true } ] } },
+            { "pane": { "surfaces": [
+              { "type": "terminal", "name": "Shell" } ] } }
+          ]
+        }
+      }
+    }
+  }
+}</code></pre>
+    <p class="small muted">Adapted from the cmux docs. Reload, then run it from the command palette.</p>
+    <div class="task"><b>Tasks m5-6, m5-8</b></div>
+  </section>
+
+  <section>
+    <h2>Remote work</h2>
+<pre><code class="language-bash">cmux ssh user@host --name "dev box"
+cmux ssh user@host --transport mosh
+cmux mosh-tmux user@host --session agent-main</code></pre>
+    <p class="small muted">A remote session lives in a workspace like any other, so notifications and layouts work the same way.</p>
+  </section>
+</section>
+
+<!-- ============ Wrap-up ============ -->
+<section>
+  <h2>Cheat sheet</h2>
+  <div class="cols">
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>P</kbd></td><td>Palette</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>N</kbd></td><td>Workspace</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>T</kbd></td><td>Surface</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>D</kbd></td><td>Split right</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>D</kbd></td><td>Split down</td></tr>
+      <tr><td><kbd>⌥</kbd><kbd>⌘</kbd><kbd>←→</kbd></td><td>Move focus</td></tr>
+    </table>
+    <table class="k">
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>↩</kbd></td><td>Zoom pane</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>I</kbd></td><td>Notifications</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>U</kbd></td><td>Latest unread</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>L</kbd></td><td>Browser</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>B</kbd></td><td>Sidebar</td></tr>
+      <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>,</kbd></td><td>Reload config</td></tr>
+    </table>
+  </div>
+  <p class="small muted">Full list: <code>reference.html</code> · practise with <code>drill.html</code></p>
+</section>
+
+<section>
+  <h2>Where next</h2>
+  <ul>
+    <li>Finish the tasks, then the stretch ones</li>
+    <li>Drill the shortcuts for a few minutes a day</li>
+    <li>Read the docs in <code>reading.html</code>, starting with Concepts</li>
+    <li>Capstone: one action that opens your whole daily layout</li>
+  </ul>
+  <p><a class="small" href="tasks.html">Go to the tasks →</a></p>
+</section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: "c/t",
+    progress: true,
+    controls: true,
+    transition: "fade",
+    width: 1100,
+    height: 700,
+    plugins: [RevealHighlight, RevealNotes],
+  });
+</script>
+</body>
+</html>

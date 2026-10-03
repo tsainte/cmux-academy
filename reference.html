@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference · cmux Academy</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap">
+  <h1>Reference</h1>
+  <p class="lede">The shortcuts and commands from the course in one searchable place. Defaults come from the cmux docs; you can rebind any of them in <code>cmux.json</code>.</p>
+  <div class="row" style="justify-content:flex-start;margin-bottom:14px">
+    <input type="search" id="q" placeholder="Search shortcuts and commands" aria-label="Search">
+    <select id="mod" aria-label="Filter by module"></select>
+  </div>
+
+  <h2 style="margin-top:.4em">Keyboard shortcuts <span class="muted" id="sc-count" style="font-size:.85rem;font-weight:400"></span></h2>
+  <div class="tablewrap"><table><thead><tr><th>Keys</th><th>Action</th><th>Group</th><th>Module</th></tr></thead><tbody id="sc"></tbody></table></div>
+
+  <h2>CLI commands <span class="muted" id="cl-count" style="font-size:.85rem;font-weight:400"></span></h2>
+  <div class="tablewrap"><table><thead><tr><th>Command</th><th>What it does</th><th>Module</th></tr></thead><tbody id="cl"></tbody></table></div>
+
+  <p class="muted" style="margin-top:20px">Seen a clash? The docs list <kbd>⌘</kbd><kbd>[</kbd> both for "focus back" and for browser back, and <kbd>⌘</kbd><kbd>⇧</kbd><kbd>H</kbd> for two actions. Which one applies depends on whether a browser has focus. If a shortcut does nothing, open the command palette (<kbd>⌘</kbd><kbd>⇧</kbd><kbd>P</kbd>) and look the action up.</p>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const { A, esc, renderNav, moduleById } = Academy;
+  renderNav("reference");
+  const modEl = document.getElementById("mod"), qEl = document.getElementById("q");
+  modEl.innerHTML = '<option value="">All modules</option>' + A.modules.map((m) => `<option value="${m.id}">${m.n}. ${esc(m.title)}</option>`).join("");
+  const keys = (k) => k.split(" ").map((x) => `<kbd>${esc(x)}</kbd>`).join(" ");
+  const label = (id) => `${moduleById[id].n}. ${esc(moduleById[id].title)}`;
+
+  function render() {
+    const q = qEl.value.trim().toLowerCase(), m = modEl.value;
+    const ok = (text, mid) => (!m || mid === m) && (!q || text.toLowerCase().includes(q));
+    const sc = A.shortcuts.filter((s) => ok(`${s.keys} ${s.action} ${s.cat}`, s.m));
+    const cl = A.commands.filter((c) => ok(`${c.cmd} ${c.what}`, c.m));
+    document.getElementById("sc").innerHTML = sc.map((s) => `<tr><td>${keys(s.keys)}</td><td>${esc(s.action)}</td><td>${esc(s.cat)}</td><td>${label(s.m)}</td></tr>`).join("") || '<tr><td colspan="4" class="muted">No matches</td></tr>';
+    document.getElementById("cl").innerHTML = cl.map((c) => `<tr><td><code>${esc(c.cmd)}</code></td><td>${esc(c.what)}</td><td>${label(c.m)}</td></tr>`).join("") || '<tr><td colspan="3" class="muted">No matches</td></tr>';
+    document.getElementById("sc-count").textContent = `(${sc.length})`;
+    document.getElementById("cl-count").textContent = `(${cl.length})`;
+  }
+  qEl.addEventListener("input", render);
+  modEl.addEventListener("change", render);
+  render();
+</script>
+</body>
+</html>

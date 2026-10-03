@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tasks · cmux Academy</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap">
+  <h1>Tasks</h1>
+  <p class="lede">Small, concrete exercises. Do them in cmux, in order within each module. Tick a task when its "you know it worked" line is true.</p>
+  <div class="card" style="margin-top:14px">
+    <div class="mod-head"><strong id="sum-text">0 of 0 done</strong><button class="btn ghost" id="reset" type="button">Reset progress</button></div>
+    <div class="bar" style="margin-top:8px" id="sum-bar"><i></i></div>
+  </div>
+  <div class="filters" id="filters" role="group" aria-label="Filter by module"></div>
+  <div class="filters" id="levels" role="group" aria-label="Filter by level"></div>
+  <div id="list"></div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const { A, esc, rich, store, doneSet, setDone, progress, renderNav, moduleById } = Academy;
+  renderNav("tasks");
+
+  const levelName = { 1: "Beginner", 2: "Intermediate", 3: "Stretch" };
+  let modFilter = (location.hash || "").slice(1);
+  if (modFilter && !moduleById[modFilter]) modFilter = "";
+  let levelFilter = 0;
+
+  function chips(el, items, current, onPick) {
+    el.innerHTML = items.map(([val, label]) =>
+      `<button type="button" data-v="${val}" aria-pressed="${String(val) === String(current)}">${esc(label)}</button>`).join("");
+    el.onclick = (e) => { const b = e.target.closest("button"); if (b) onPick(b.dataset.v); };
+  }
+
+  function render() {
+    chips(document.getElementById("filters"),
+      [["", "All modules"], ...A.modules.map((m) => [m.id, `${m.n}. ${m.title}`])], modFilter,
+      (v) => { modFilter = v; history.replaceState(null, "", v ? "#" + v : location.pathname); render(); });
+    chips(document.getElementById("levels"),
+      [[0, "Any level"], [1, "Beginner"], [2, "Intermediate"], [3, "Stretch"]], levelFilter,
+      (v) => { levelFilter = Number(v); render(); });
+
+    const done = doneSet();
+    const all = progress();
+    document.getElementById("sum-text").textContent = `${all.done} of ${all.total} done (${all.pct}%)`;
+    document.getElementById("sum-bar").firstElementChild.style.width = all.pct + "%";
+
+    let html = "";
+    for (const m of A.modules) {
+      if (modFilter && m.id !== modFilter) continue;
+      const tasks = A.tasks.filter((t) => t.m === m.id && (!levelFilter || t.level === levelFilter));
+      if (!tasks.length) continue;
+      const p = progress(m.id);
+      html += `<h2 id="${m.id}">Module ${m.n}: ${esc(m.title)} <span class="muted" style="font-size:.85rem;font-weight:400">${p.done}/${p.total}</span></h2>`;
+      html += tasks.map((t) => `
+        <div class="task ${done.has(t.id) ? "done" : ""}">
+          <input type="checkbox" id="${t.id}" ${done.has(t.id) ? "checked" : ""} aria-label="Mark ${esc(t.title)} as done">
+          <div>
+            <h3><label for="${t.id}">${esc(t.title)}</label> <span class="pill l${t.level}">${levelName[t.level]}</span></h3>
+            <ol>${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol>
+            <div class="check"><b>You know it worked when:</b> ${rich(t.check)}</div>
+          </div>
+        </div>`).join("");
+    }
+    document.getElementById("list").innerHTML = html || '<p class="muted">No tasks match this filter.</p>';
+  }
+
+  document.getElementById("list").addEventListener("change", (e) => {
+    if (e.target.matches("input[type=checkbox]")) { setDone(e.target.id, e.target.checked); render(); }
+  });
+  document.getElementById("reset").addEventListener("click", () => {
+    if (confirm("Clear all task progress in this browser?")) { store.set("done", []); render(); }
+  });
+  render();
+</script>
+</body>
+</html>

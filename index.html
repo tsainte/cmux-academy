@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cmux Academy</title>
+<meta name="description" content="A self-paced course for learning cmux: slides, hands-on tasks, shortcut drills and a tracking spreadsheet.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Learn cmux by doing</h1>
+      <p class="lede">cmux is a native macOS terminal built on Ghostty for running several coding agents side by side. This course takes about three hours in total, and almost all of it happens inside cmux itself.</p>
+      <div class="cta">
+        <a class="btn" href="tasks.html">Start the tasks</a>
+        <a class="btn ghost" href="slides.html">Open the slides</a>
+        <a class="btn ghost" href="cmux-academy.xlsx" download>Download the tracker (.xlsx)</a>
+      </div>
+    </div>
+    <div class="card" aria-live="polite">
+      <h3>Your progress</h3>
+      <p class="muted" style="margin:.2em 0 .7em" id="overall-text">0 of 0 tasks</p>
+      <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" id="overall-bar"><i></i></div>
+      <p class="muted" style="margin:.8em 0 0;font-size:.85rem">Saved in this browser only.</p>
+    </div>
+  </section>
+
+  <h2>How the academy works</h2>
+  <div class="grid">
+    <div class="card"><h3>1. Watch</h3><p class="muted" style="margin:0">The <a href="slides.html">slide deck</a> covers each module in 5 to 10 minutes. Press <kbd>S</kbd> for speaker view, <kbd>?</kbd> for slide shortcuts.</p></div>
+    <div class="card"><h3>2. Do</h3><p class="muted" style="margin:0"><a href="tasks.html">Small tasks</a>, each with exact steps and a way to know it worked. Tick them off as you go.</p></div>
+    <div class="card"><h3>3. Drill</h3><p class="muted" style="margin:0"><a href="drill.html">Flashcards</a> for shortcuts and commands, with spaced repetition by hand: the ones you miss come back.</p></div>
+    <div class="card"><h3>4. Track and read</h3><p class="muted" style="margin:0">The <a href="cmux-academy.xlsx" download>spreadsheet</a> holds confidence ratings and notes. The <a href="reading.html">reading list</a> points at the official docs.</p></div>
+  </div>
+
+  <h2>Curriculum</h2>
+  <div id="modules"></div>
+
+  <h2>Tip: view this inside cmux</h2>
+  <div class="card">
+    <p style="margin-top:0">Serve the folder and open it in a browser split, so the lesson and the practice sit side by side:</p>
+<pre><code>cd ~/Developer/study/terminal/cmux-academy
+python3 -m http.server 8000
+# in another pane:
+cmux browser open http://localhost:8000</code></pre>
+    <p style="margin-bottom:0" class="muted">The slides load reveal.js from a CDN, so they need a network connection.</p>
+  </div>
+</main>
+<footer><div class="wrap">Based on the cmux docs and <code>cmux --help</code> for cmux 0.64.x. Shortcuts and commands change between releases, so check <code>cmux docs shortcuts</code> if something differs.</div></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const { A, esc, progress, renderNav } = Academy;
+  renderNav("home");
+
+  function render() {
+    const all = progress();
+    document.getElementById("overall-text").textContent = `${all.done} of ${all.total} tasks (${all.pct}%)`;
+    const ob = document.getElementById("overall-bar");
+    ob.setAttribute("aria-valuenow", all.pct);
+    ob.firstElementChild.style.width = all.pct + "%";
+
+    document.getElementById("modules").innerHTML = A.modules.map((m) => {
+      const p = progress(m.id);
+      const slideNo = { m1: 1, m2: 2, m3: 3, m4: 4, m5: 5 }[m.id];
+      return `<section class="module"><div class="card">
+        <div class="mod-head"><h3 style="font-size:1.15rem">Module ${m.n}: ${esc(m.title)}</h3>
+        <span class="meta">about ${m.minutes} min · ${p.done}/${p.total} tasks</span></div>
+        <p class="muted" style="margin:.3em 0 .8em">${esc(m.blurb)}</p>
+        <div class="bar ${p.pct === 100 ? "ok" : ""}" style="margin-bottom:12px"><i style="width:${p.pct}%"></i></div>
+        <a href="slides.html#/m${slideNo}">Slides</a> · <a href="tasks.html#${m.id}">Tasks</a> · <a href="drill.html#${m.id}">Drill</a>
+      </div></section>`;
+    }).join("");
+  }
+  render();
+  addEventListener("pageshow", render);
+</script>
+</body>
+</html>
